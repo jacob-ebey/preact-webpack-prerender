@@ -75,6 +75,7 @@ const serverConfig = {
   plugins: [
     ...baseConfig.plugins,
     new PreactPrerenderPlugin({
+      publicPath: process.env.PUBLIC_PATH,
       paths,
     }),
   ],

@@ -37,7 +37,7 @@ const hoofdStringify = (title, metas, links, ampScript) => {
   `;
 };
 
-async function prerenderRoute(compilation, p, timestamp) {
+async function prerenderRoute(compilation, p, publicPath, timestamp) {
   const appPath = path.resolve(compilation.outputOptions.path, "main.js");
 
   const { h } = require("preact");
@@ -59,7 +59,7 @@ async function prerenderRoute(compilation, p, timestamp) {
     ${hoofdStringified}
   </head>
   <body>${rendered}
-    <script src="/static/main.js?ts=${timestamp}"></script>
+    <script src="${publicPath}/static/main.js?ts=${timestamp}"></script>
   </body>
 </html>`;
 
@@ -81,6 +81,7 @@ class PreactPrerenderPlugin {
     options = options || {};
     this._dir = options.dir || path.resolve(process.cwd(), "public");
     this._paths = options.paths || ["/"];
+    this._publicPath = options.publicPath || "";
   }
 
   /**
@@ -91,7 +92,12 @@ class PreactPrerenderPlugin {
       const timestamp = Date.now();
 
       for (const p of this._paths) {
-        const html = await prerenderRoute(compilation, p, timestamp);
+        const html = await prerenderRoute(
+          compilation,
+          p,
+          this._publicPath,
+          timestamp
+        );
 
         const pp = p.startsWith("/") ? p.slice(1) : p;
         const dir = path.resolve(this._dir, pp);

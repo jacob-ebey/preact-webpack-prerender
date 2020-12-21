@@ -21,6 +21,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm install
       - run: npm run build
+        env:
+          PUBLIC_PATH: "https://jacob-ebey.js.org/preact-webpack-prerender"
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
