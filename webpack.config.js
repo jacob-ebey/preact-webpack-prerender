@@ -53,6 +53,8 @@ const clientConfig = {
   entry: "./src/index.jsx",
   output: {
     path: path.resolve(__dirname, "public/static"),
+    chunkFilename: "[name].[contenthash].js",
+    assetModuleFilename: "[name].[contenthash][ext][query]",
   },
 };
 
