@@ -25,7 +25,11 @@ module.exports = async function prerender(vnode, options) {
     try {
       return renderToString(vnode);
     } catch (e) {
-      if (e && e.then) return e.then(render);
+      if (e && e.then)
+        return e.then((res) => {
+          console.log(res && res.preload);
+          return render();
+        });
       throw e;
     }
   };

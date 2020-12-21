@@ -6,7 +6,7 @@ function prerenderExternals() {
     "preact/hooks": "preact/hooks/dist/hooks.js",
     "hoofd/preact": "hoofd/preact",
     "preact-iso": path.resolve(process.cwd(), "dist/preact-iso/index.js"),
-    "preact-iso/lazy": path.resolve(process.cwd(), "dist/preact-iso/lazy.js"),
+    "preact-iso/lazy": path.resolve(__dirname, "lazy.js"),
     "preact-iso/router": path.resolve(
       process.cwd(),
       "dist/preact-iso/router.js"

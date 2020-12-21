@@ -7,6 +7,7 @@ const nodeExternals = require("webpack-node-externals");
 const PrerenderPlugin = require("./webpack/prerender-plugin");
 const prerenderExternals = require("./webpack/prerender-externals");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const prerenderRules = require("./webpack/prerender-rules");
 
 const paths = ["/", "/about", "404.html"];
 
@@ -59,23 +60,6 @@ const baseConfig = {
       PUBLIC_PATH: JSON.stringify(process.env.PUBLIC_PATH || null),
     }),
   ],
-  module: {
-    rules: [
-      { test: /\.m?js/, type: "javascript/auto" },
-      {
-        include: /\.jsx?/,
-        use: {
-          loader: "esbuild-loader",
-          options: {
-            loader: "jsx",
-            target: "es2015",
-            jsxFactory: "h",
-            jsxFragment: "Fragment",
-          },
-        },
-      },
-    ],
-  },
 };
 
 /** @type {Configuration} */
@@ -88,8 +72,7 @@ const clientConfig = {
     assetModuleFilename: "[name].[contenthash][ext][query]",
   },
   module: {
-    ...baseConfig.module,
-    rules: [...baseConfig.module.rules, ...cssRules()],
+    rules: [...cssRules(), ...prerenderRules()],
   },
 };
 
@@ -103,8 +86,7 @@ const serverConfig = {
     library: { type: "commonjs" },
   },
   module: {
-    ...baseConfig.module,
-    rules: [...baseConfig.module.rules, ...cssRules(true)],
+    rules: [...cssRules(true), ...prerenderRules(true)],
   },
   externals: [prerenderExternals()],
   plugins: [
