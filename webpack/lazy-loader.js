@@ -53,6 +53,7 @@ function lazyLoader(source) {
       for (const chunk of stats.chunks) {
         if (chunk.modules && chunk.files) {
           const mods = findModulesForImportPath(chunk.modules, importPath);
+          // TODO: Get deps of the mods.
           if (mods.length > 0) {
             chunk.files.forEach((f) => preload.add(f));
           }
