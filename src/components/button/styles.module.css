@@ -1,0 +1,19 @@
+.button {
+  background-color: #ffffff;
+  border-radius: 0.12em;
+  border: 0.1em solid #000000;
+  box-sizing: border-box;
+  color: #000000;
+  display: inline-block;
+  font-weight: 300;
+  margin: 0 0.2em 0.2em 0;
+  padding: 0.46em 1.6em;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+}
+
+.button:hover {
+  text-shadow: 0 0 2em rgba(255, 255, 255, 1);
+  border-color: #ffffff;
+}

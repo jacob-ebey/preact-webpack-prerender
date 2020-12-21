@@ -6,19 +6,27 @@
   "scripts": {
     "postinstall": "npm run build-iso",
     "build-iso": "esbuild --outdir=dist/preact-iso --format=cjs ./node_modules/preact-iso/index.js ./node_modules/preact-iso/lazy.js ./node_modules/preact-iso/router.js ./node_modules/preact-iso/hydrate.js ./node_modules/preact-iso/prerender.js",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "serve": "serve ./public",
+    "watch": "webpack --mode development --watch",
+    "dev": "run-p watch serve"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "classnames": "^2.2.6",
     "hoofd": "^1.0.2",
     "preact": "^10.5.7",
     "preact-iso": "^0.2.0"
   },
   "devDependencies": {
+    "css-loader": "^5.0.1",
     "esbuild-loader": "^2.7.0",
+    "file-loader": "^6.2.0",
     "html-minifier-terser": "^5.1.1",
+    "mini-css-extract-plugin": "^1.3.3",
+    "npm-run-all": "^4.1.5",
     "preact-render-to-string": "^5.1.12",
     "preload-webpack-plugin": "^2.3.0",
     "webpack": "^5.11.0",

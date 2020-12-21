@@ -1,14 +1,40 @@
 const path = require("path");
 
 const { ESBuildPlugin, ESBuildMinifyPlugin } = require("esbuild-loader");
-const { DefinePlugin } = require("webpack");
+const { DefinePlugin, ProgressPlugin } = require("webpack");
 const nodeExternals = require("webpack-node-externals");
 
-const PreactPrerenderPlugin = require("./webpack/prerender-plugin");
+const PrerenderPlugin = require("./webpack/prerender-plugin");
+const prerenderExternals = require("./webpack/prerender-externals");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const paths = ["/", "/about"];
+const paths = ["/", "/about", "404.html"];
 
 /** @typedef {import("webpack").Configuration} Configuration */
+
+function cssRules(ssr = false) {
+  return [
+    {
+      include: /\.module\.css$/,
+      use: ssr
+        ? {
+            loader: "css-loader",
+            options: {
+              modules: { exportOnlyLocals: true },
+            },
+          }
+        : [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: "css-loader",
+              options: {
+                modules: true,
+              },
+            },
+          ],
+    },
+  ];
+}
 
 /** @type {Configuration} */
 const baseConfig = {
@@ -21,10 +47,14 @@ const baseConfig = {
       new ESBuildMinifyPlugin({
         target: "es2015",
       }),
+      new ProgressPlugin(),
     ],
   },
   plugins: [
     new ESBuildPlugin(),
+    new MiniCssExtractPlugin({
+      filename: "styles.css",
+    }),
     new DefinePlugin({
       PUBLIC_PATH: JSON.stringify(process.env.PUBLIC_PATH || null),
     }),
@@ -57,6 +87,10 @@ const clientConfig = {
     chunkFilename: "[name].[contenthash].js",
     assetModuleFilename: "[name].[contenthash][ext][query]",
   },
+  module: {
+    ...baseConfig.module,
+    rules: [...baseConfig.module.rules, ...cssRules()],
+  },
 };
 
 /** @type {Configuration} */
@@ -68,22 +102,14 @@ const serverConfig = {
     path: path.resolve(__dirname, "dist/prerender"),
     library: { type: "commonjs" },
   },
-  externals: [
-    {
-      preact: "preact/dist/preact.js",
-      "preact/hooks": "preact/hooks/dist/hooks.js",
-      "hoofd/preact": "hoofd/preact",
-      "preact-iso": path.resolve(process.cwd(), "dist/preact-iso/index.js"),
-      "preact-iso/lazy": path.resolve(process.cwd(), "dist/preact-iso/lazy.js"),
-      "preact-iso/router": path.resolve(
-        process.cwd(),
-        "dist/preact-iso/router.js"
-      ),
-    },
-  ],
+  module: {
+    ...baseConfig.module,
+    rules: [...baseConfig.module.rules, ...cssRules(true)],
+  },
+  externals: [prerenderExternals()],
   plugins: [
     ...baseConfig.plugins,
-    new PreactPrerenderPlugin({
+    new PrerenderPlugin({
       publicPath: process.env.PUBLIC_PATH,
       paths,
     }),

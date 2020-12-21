@@ -12,7 +12,7 @@ const About = lazy(() => import("./pages/about"));
 const NotFound = lazy(() => import("./pages/_404"));
 
 function routePath(path) {
-  if (typeof window === "undefined") {
+  if (typeof window === "undefined" || !publicPath) {
     return path;
   }
 

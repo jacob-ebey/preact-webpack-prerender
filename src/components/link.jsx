@@ -5,7 +5,11 @@ const publicPath = typeof PUBLIC_PATH !== "undefined" ? PUBLIC_PATH : "";
 
 export default function Link({ as = "a", href, ...rest }) {
   const url = useMemo(() => {
-    return publicPath + href;
+    if (publicPath) {
+      return publicPath + href;
+    }
+
+    return href;
   }, [href]);
 
   const Component = as;

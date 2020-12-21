@@ -4,7 +4,7 @@ const path = require("path");
 const { minify } = require("html-minifier-terser");
 const webpack = require("webpack");
 
-const PLUGIN_NAME = "PreactPrerenderPlugin";
+const PLUGIN_NAME = "PrerenderPlugin";
 
 const hoofdStringify = (title, metas, links, ampScript) => {
   const visited = new Set();
@@ -39,12 +39,15 @@ const hoofdStringify = (title, metas, links, ampScript) => {
 };
 
 async function prerenderRoute(compilation, p, publicPath, timestamp) {
-  const appPath = path.resolve(compilation.outputOptions.path, "main.js");
-
+  const { LocationProvider } = require(path.join(
+    process.cwd(),
+    "dist/preact-iso/router"
+  ));
+  const { toStatic } = require("hoofd/preact");
   const { h } = require("preact");
   const prerender = require("./prerender");
-  const { LocationProvider } = require("../dist/preact-iso/router");
-  const { toStatic } = require("hoofd/preact");
+
+  const appPath = path.resolve(compilation.outputOptions.path, "main.js");
 
   const App = require(appPath).default;
 
@@ -59,6 +62,7 @@ async function prerenderRoute(compilation, p, publicPath, timestamp) {
 <html ${lang ? `lang="${lang}"` : ""} ${amp ? `amp` : ""}>
   <head>
     ${hoofdStringified}
+    <link rel="stylesheet" href="${publicPath}/static/styles.css?ts=${timestamp}" />
   </head>
   <body>${rendered}
     <script src="${publicPath}/static/main.js?ts=${timestamp}"></script>
@@ -80,7 +84,7 @@ async function prerenderRoute(compilation, p, publicPath, timestamp) {
  * @property {string[]} paths
  */
 
-class PreactPrerenderPlugin {
+class PrerenderPlugin {
   /**
    *
    * @param {PreactPrerenderPluginOptions} options
@@ -97,7 +101,15 @@ class PreactPrerenderPlugin {
    */
   apply(compiler) {
     compiler.hooks.afterEmit.tapPromise(PLUGIN_NAME, async (compilation) => {
+      await fs.promises.mkdir(this._dir, { recursive: true });
       const timestamp = Date.now();
+
+      const distDir = path.resolve(this._dir);
+      for (const key of Object.keys(require.cache)) {
+        if (!key.includes("node_modules")) {
+          delete require.cache[key];
+        }
+      }
 
       for (const p of this._paths) {
         const html = await prerenderRoute(
@@ -108,14 +120,17 @@ class PreactPrerenderPlugin {
         );
 
         const pp = p.startsWith("/") ? p.slice(1) : p;
-        const dir = path.resolve(this._dir, pp);
-        const filename = path.resolve(dir, "index.html");
+        let filename = path.resolve(this._dir, pp);
+        if (!pp.endsWith(".html")) {
+          await fs.promises.mkdir(filename, { recursive: true });
 
-        await fs.promises.mkdir(dir, { recursive: true });
+          filename = path.resolve(filename, "index.html");
+        }
+
         await fs.promises.writeFile(filename, html, "utf-8");
       }
     });
   }
 }
 
-module.exports = PreactPrerenderPlugin;
+module.exports = PrerenderPlugin;
