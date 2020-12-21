@@ -3,6 +3,7 @@ const path = require("path");
 const { ESBuildPlugin, ESBuildMinifyPlugin } = require("esbuild-loader");
 const { DefinePlugin, ProgressPlugin } = require("webpack");
 const nodeExternals = require("webpack-node-externals");
+const { StatsWriterPlugin } = require("webpack-stats-plugin");
 
 const PrerenderPlugin = require("./webpack/prerender-plugin");
 const prerenderExternals = require("./webpack/prerender-externals");
@@ -74,6 +75,17 @@ const clientConfig = {
   module: {
     rules: [...cssRules(), ...prerenderRules()],
   },
+  plugins: [
+    ...baseConfig.plugins,
+    new StatsWriterPlugin({
+      stats: {
+        all: true,
+        // assets: false,
+        // chunks: true,
+        modules: true,
+      },
+    }),
+  ],
 };
 
 /** @type {Configuration} */

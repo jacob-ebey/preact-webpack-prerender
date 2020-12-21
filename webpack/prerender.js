@@ -20,6 +20,7 @@ module.exports = async function prerender(vnode, options) {
     vnode = cloneElement(vnode, props);
   }
 
+  const preload = new Set();
   const render = () => {
     if (++tries > maxDepth) return;
     try {
@@ -27,7 +28,10 @@ module.exports = async function prerender(vnode, options) {
     } catch (e) {
       if (e && e.then)
         return e.then((res) => {
-          console.log(res && res.preload);
+          if (res && res.preload) {
+            res.preload.forEach((p) => preload.add(p));
+          }
+
           return render();
         });
       throw e;
@@ -35,5 +39,5 @@ module.exports = async function prerender(vnode, options) {
   };
 
   const html = await render();
-  return html;
+  return { html, preload: [...preload] };
 };

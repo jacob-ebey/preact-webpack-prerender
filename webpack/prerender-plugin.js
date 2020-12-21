@@ -38,6 +38,14 @@ const hoofdStringify = (title, metas, links, ampScript) => {
   `;
 };
 
+function renderPreload(preload, publicPath) {
+  return preload.map((p) =>
+    p.endsWith(".js")
+      ? `<link rel="preload" as="script" href="${publicPath}/static/${p}" />`
+      : `<link rel="stylesheet" href="${publicPath}/static/${p}" />`
+  );
+}
+
 async function prerenderRoute(compilation, p, publicPath, timestamp) {
   const { LocationProvider } = require(path.join(
     process.cwd(),
@@ -63,8 +71,9 @@ async function prerenderRoute(compilation, p, publicPath, timestamp) {
   <head>
     ${hoofdStringified}
     <link rel="stylesheet" href="${publicPath}/static/styles.css?ts=${timestamp}" />
+    ${renderPreload(rendered.preload, publicPath)}
   </head>
-  <body>${rendered}
+  <body>${rendered.html}
     <script src="${publicPath}/static/main.js?ts=${timestamp}"></script>
   </body>
 </html>`,
