@@ -38,12 +38,26 @@ const hoofdStringify = (title, metas, links, ampScript) => {
   `;
 };
 
-function renderPreload(preload, publicPath) {
-  return preload.map(
-    (p) =>
-      `<link rel="preload" as="${
-        p.endsWith(".js") ? "script" : "style"
-      }" href="${publicPath}/static/${p}" />`
+function renderPreload(preload, publicPath, timestamp) {
+  let styles = "";
+  return (
+    preload
+      .map((p) => {
+        if (p === "main.js") {
+          return "";
+        }
+
+        let tag = `<link rel="preload" as="${
+          p.endsWith(".js") ? "script" : "style"
+        }" href="${publicPath}/static/${p}" />`;
+
+        if (p.endsWith(".css")) {
+          styles += `<link rel="stylesheet" href="${publicPath}/static/${p}?ts=${timestamp}" />`;
+        }
+
+        return tag;
+      })
+      .join("\n") + styles
   );
 }
 
@@ -72,7 +86,7 @@ async function prerenderRoute(compilation, p, publicPath, timestamp) {
   <head>
     ${hoofdStringified}
     <link rel="stylesheet" href="${publicPath}/static/styles.css?ts=${timestamp}" />
-    ${renderPreload(rendered.preload, publicPath)}
+    ${renderPreload(rendered.preload, publicPath, timestamp)}
   </head>
   <body>${rendered.html}
     <script src="${publicPath}/static/main.js?ts=${timestamp}"></script>
