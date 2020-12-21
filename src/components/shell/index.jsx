@@ -1,15 +1,17 @@
 import { h } from "preact";
 
+import Link from "../link";
+
 export default function Shell({ children }) {
   return (
     <div className="shell">
       <nav>
         <ul>
           <li>
-            <a href="/">Home</a>
+            <Link href="/">Home</Link>
           </li>
           <li>
-            <a href="/about">About</a>
+            <Link href="/about">About</Link>
           </li>
         </ul>
       </nav>

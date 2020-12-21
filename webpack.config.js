@@ -1,6 +1,7 @@
 const path = require("path");
 
 const { ESBuildPlugin, ESBuildMinifyPlugin } = require("esbuild-loader");
+const { DefinePlugin } = require("webpack");
 const nodeExternals = require("webpack-node-externals");
 
 const PreactPrerenderPlugin = require("./webpack/prerender-plugin");
@@ -21,7 +22,12 @@ const baseConfig = {
       }),
     ],
   },
-  plugins: [new ESBuildPlugin()],
+  plugins: [
+    new ESBuildPlugin(),
+    new DefinePlugin({
+      PUBLIC_PATH: JSON.stringify(process.env.PUBLIC_PATH || null),
+    }),
+  ],
   module: {
     rules: [
       { test: /\.m?js/, type: "javascript/auto" },
