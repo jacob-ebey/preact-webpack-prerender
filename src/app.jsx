@@ -12,7 +12,15 @@ const About = lazy(() => import("./pages/about"));
 const NotFound = lazy(() => import("./pages/_404"));
 
 function routePath(path) {
-  return typeof window !== "undefined" ? publicPath + path : path;
+  if (typeof window === "undefined") {
+    return path;
+  }
+
+  if (path === "/") {
+    return publicPath;
+  }
+
+  return publicPath + path;
 }
 
 export default function App() {
