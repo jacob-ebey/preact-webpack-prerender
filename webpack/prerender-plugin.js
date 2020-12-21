@@ -39,10 +39,11 @@ const hoofdStringify = (title, metas, links, ampScript) => {
 };
 
 function renderPreload(preload, publicPath) {
-  return preload.map((p) =>
-    p.endsWith(".js")
-      ? `<link rel="preload" as="script" href="${publicPath}/static/${p}" />`
-      : `<link rel="stylesheet" href="${publicPath}/static/${p}" />`
+  return preload.map(
+    (p) =>
+      `<link rel="preload" as="${
+        p.endsWith(".js") ? "script" : "style"
+      }" href="${publicPath}/static/${p}" />`
   );
 }
 
