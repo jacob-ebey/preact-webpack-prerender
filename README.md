@@ -2,6 +2,8 @@
 
 POC of pre-rendering Preact applications via a webpack plugin using preact-iso.
 
+[Example](https://jacob-ebey.js.org/preact-webpack-prerender/)
+
 ## How it works
 
 Within `webpack.config.js` there is a list of paths defined at the top that is passed onto the `webpack/prerender-plugin.js` that looks like:
