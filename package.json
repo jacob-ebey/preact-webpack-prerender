@@ -18,6 +18,7 @@
   },
   "devDependencies": {
     "esbuild-loader": "^2.7.0",
+    "html-minifier-terser": "^5.1.1",
     "preact-render-to-string": "^5.1.12",
     "preload-webpack-plugin": "^2.3.0",
     "webpack": "^5.11.0",

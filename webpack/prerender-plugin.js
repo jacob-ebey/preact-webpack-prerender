@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
+const { minify } = require("html-minifier-terser");
 const webpack = require("webpack");
 
 const PLUGIN_NAME = "PreactPrerenderPlugin";
@@ -53,7 +54,8 @@ async function prerenderRoute(compilation, p, publicPath, timestamp) {
   const { metas, links, title, lang, amp, ampScript } = toStatic();
   const hoofdStringified = hoofdStringify(title, metas, links, ampScript);
 
-  const html = `<!doctype html>
+  const html = minify(
+    `<!doctype html>
 <html ${lang ? `lang="${lang}"` : ""} ${amp ? `amp` : ""}>
   <head>
     ${hoofdStringified}
@@ -61,7 +63,13 @@ async function prerenderRoute(compilation, p, publicPath, timestamp) {
   <body>${rendered}
     <script src="${publicPath}/static/main.js?ts=${timestamp}"></script>
   </body>
-</html>`;
+</html>`,
+    {
+      collapseWhitespace: true,
+      collapseInlineTagWhitespace: true,
+      removeComments: true,
+    }
+  );
 
   return html;
 }
