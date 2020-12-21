@@ -12,6 +12,7 @@ const paths = ["/", "/about"];
 
 /** @type {Configuration} */
 const baseConfig = {
+  devtool: "source-map",
   resolve: {
     extensions: [".js", ".jsx"],
   },
