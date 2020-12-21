@@ -1,0 +1,46 @@
+html,
+body {
+  background-color: black;
+  color: #ffffff;
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+._1DrieJlUqckF-ga9nnSv5f {
+  margin: 0;
+  padding: 0;
+}
+
+.NaohKNVLPhc3S6Vj92jZE {
+  background-color: #673ab8;
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.NaohKNVLPhc3S6Vj92jZE > li {
+  padding: 0;
+}
+
+.NaohKNVLPhc3S6Vj92jZE > li:active,
+.NaohKNVLPhc3S6Vj92jZE > li:hover {
+  background-color: hsla(0, 0%, 100%, 0.3);
+}
+
+.NaohKNVLPhc3S6Vj92jZE > li a {
+  color: #ffffff;
+  display: inline-block;
+  padding: 1rem;
+  text-decoration: none;
+}
+
+._2FKBGOWixN09YFZGHeIqHn {
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 1rem;
+}
+
+
+/*# sourceMappingURL=styles.css.map*/

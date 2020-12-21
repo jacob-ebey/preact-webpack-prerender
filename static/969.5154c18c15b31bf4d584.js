@@ -1,0 +1,7 @@
+(self.webpackChunkpreact_webpack_prerender=self.webpackChunkpreact_webpack_prerender||[]).push([[969],{463:(h,i)=>{var a,n;/*!
+  Copyright (c) 2017 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/(function(){"use strict";var m={}.hasOwnProperty;function r(){for(var l=[],u=0;u<arguments.length;u++){var s=arguments[u];if(!s)continue;var f=typeof s;if(f==="string"||f==="number")l.push(s);else if(Array.isArray(s)&&s.length){var p=r.apply(null,s);p&&l.push(p)}else if(f==="object")for(var c in s)m.call(s,c)&&s[c]&&l.push(c)}return l.join(" ")}h.exports?(r.default=r,h.exports=r):!(a=[],n=function(){return r}.apply(i,a),n!==void 0&&(h.exports=n))})()},969:(h,i,a)=>{"use strict";a.r(i),a.d(i,{default:()=>y});var n=a(45),m=a(206),r=a(379),l=a(463),u=a.n(l);const s={button:"_1vuPrp15jtKNFtKhYL913J"};var f=Object.prototype.hasOwnProperty,p=Object.getOwnPropertySymbols,c=Object.prototype.propertyIsEnumerable,O=Object.assign,b=(t,o)=>{var v={};for(var e in t)f.call(t,e)&&o.indexOf(e)<0&&(v[e]=t[e]);if(t!=null&&p)for(var e of p(t))o.indexOf(e)<0&&c.call(t,e)&&(v[e]=t[e]);return v};function d(t){var{as:o="button",className:v}=t,e=b(t,["as","className"]);const C=o;return(0,n.h)(C,O({className:u()(s.button,v)},e))}function y(){(0,r.ZQ)("Home");const[t,o]=(0,m.eJ)(0);return(0,n.h)(n.HY,null,(0,n.h)("h1",null,"Home Page :D"),(0,n.h)("p",null,"Count: ",t),(0,n.h)(d,{onClick:()=>o(t-1)},"-"),(0,n.h)(d,{onClick:()=>o(t+1)},"+"))}}}]);
+
+//# sourceMappingURL=969.5154c18c15b31bf4d584.js.map
