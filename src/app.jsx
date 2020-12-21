@@ -5,9 +5,15 @@ import { useLang, useTitleTemplate } from "hoofd/preact";
 
 import Shell from "./components/shell";
 
+const publicPath = PUBLIC_PATH;
+
 const Home = lazy(() => import("./pages/home"));
 const About = lazy(() => import("./pages/about"));
 const NotFound = lazy(() => import("./pages/_404"));
+
+function routePath(path) {
+  return typeof window !== "undefined" ? publicPath + path : path;
+}
 
 export default function App() {
   useLang("en-us");
@@ -17,8 +23,8 @@ export default function App() {
     <Shell>
       <ErrorBoundary>
         <Router>
-          <Home path="/" />
-          <About path="/about" />
+          <Home path={routePath("/")} />
+          <About path={routePath("/about")} />
           <NotFound default />
         </Router>
       </ErrorBoundary>
