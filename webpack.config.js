@@ -47,10 +47,10 @@ const baseConfig = {
       new ESBuildMinifyPlugin({
         target: "es2015",
       }),
-      new ProgressPlugin(),
     ],
   },
   plugins: [
+    new ProgressPlugin(),
     new ESBuildPlugin(),
     new MiniCssExtractPlugin({
       filename: "styles.css",
