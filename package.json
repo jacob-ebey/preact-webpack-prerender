@@ -1,0 +1,27 @@
+{
+  "name": "preact-webpack-prerender",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "npm run build-iso",
+    "build-iso": "esbuild --outdir=dist/preact-iso --format=cjs ./node_modules/preact-iso/index.js ./node_modules/preact-iso/lazy.js ./node_modules/preact-iso/router.js ./node_modules/preact-iso/hydrate.js ./node_modules/preact-iso/prerender.js",
+    "build": "webpack --mode production"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "hoofd": "^1.0.2",
+    "preact": "^10.5.7",
+    "preact-iso": "^0.2.0"
+  },
+  "devDependencies": {
+    "esbuild-loader": "^2.7.0",
+    "preact-render-to-string": "^5.1.12",
+    "preload-webpack-plugin": "^2.3.0",
+    "webpack": "^5.11.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-node-externals": "^2.5.2"
+  }
+}
