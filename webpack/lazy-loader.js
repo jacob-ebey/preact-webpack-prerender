@@ -27,14 +27,22 @@ function lazyLoader(source) {
   const done = this.async();
   // TODO: Get chunks from stats and add to preload array
 
-  const stats = JSON.parse(
-    fs
-      .readFileSync(
-        path.resolve(process.cwd(), "public/static/stats.json"),
-        "utf-8"
-      )
-      .toString()
-  );
+  let stats;
+  try {
+    stats = JSON.parse(
+      fs
+        .readFileSync(
+          path.resolve(process.cwd(), "public/static/stats.json"),
+          "utf-8"
+        )
+        .toString()
+    );
+  } catch (e) {}
+
+  if (!stats) {
+    done(null, source, null);
+    return;
+  }
 
   const replaced = source.replace(
     /\)\s{0,}=>\s{0,}(import\s{0,}\([\'|\"](.*)[\'|\"]\s{0,}\))/g,
