@@ -9,22 +9,28 @@ const PLUGIN_NAME = "PrerenderPlugin";
 const hoofdStringify = (title, metas, links, ampScript) => {
   const visited = new Set();
   return `
-    <title>${title}</title>
+    ${title ? `<title>${title}</title>` : ""}
 
     ${
       ampScript
-        ? `<script src={ampScript} async ${
+        ? `<script src="${ampScript}" async ${
             ampScript.endsWith("mjs") ? 'type="module"' : ""
           } />`
         : ""
     }
 
     ${metas.reduce((acc, meta) => {
-      if (!visited.has(meta.charset ? meta.keyword : meta[meta.keyword])) {
-        visited.add(meta.charset ? meta.keyword : meta[meta.keyword]);
-        return `${acc}<meta ${meta.keyword}="${meta[meta.keyword]}"${
-          meta.charset ? "" : ` content="${meta.content}"`
-        }>`;
+      if (
+        !visited.has(
+          meta.charset ? meta.keyword : meta[meta.keyword] || meta.name
+        )
+      ) {
+        visited.add(
+          meta.charset ? meta.keyword : meta[meta.keyword] || meta.name
+        );
+        return `${acc}<meta ${meta.keyword || "name"}="${
+          meta[meta.keyword] || meta.name
+        }"${meta.charset ? "" : ` content="${meta.content}"`}>`;
       }
       return acc;
     }, "")}
@@ -69,6 +75,7 @@ async function prerenderRoute(compilation, p, publicPath, timestamp) {
   const { toStatic } = require("hoofd/preact");
   const { h } = require("preact");
   const prerender = require("./prerender");
+  const useStaticResult = require("./useStaticResult");
 
   const appPath = path.resolve(compilation.outputOptions.path, "main.js");
 
@@ -76,6 +83,7 @@ async function prerenderRoute(compilation, p, publicPath, timestamp) {
 
   const app = h(LocationProvider.ctx.Provider, { value: { path: p } }, h(App));
 
+  useStaticResult.rewind();
   const rendered = await prerender(app);
   const { metas, links, title, lang, amp, ampScript } = toStatic();
   const hoofdStringified = hoofdStringify(title, metas, links, ampScript);
@@ -88,7 +96,10 @@ async function prerenderRoute(compilation, p, publicPath, timestamp) {
     <link rel="stylesheet" href="${publicPath}/static/styles.css?ts=${timestamp}" />
     ${renderPreload(rendered.preload, publicPath, timestamp)}
   </head>
-  <body>${rendered.html}
+  <body>${rendered.html || ""}
+    <script>var USE_STATIC_RESULTS = ${JSON.stringify(
+      rendered.useStaticResults
+    )};</script>
     <script src="${publicPath}/static/main.js?ts=${timestamp}"></script>
   </body>
 </html>`,

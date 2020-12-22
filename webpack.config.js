@@ -1,3 +1,4 @@
+const fs = require("fs");
 const path = require("path");
 
 const { ESBuildPlugin, ESBuildMinifyPlugin } = require("esbuild-loader");
@@ -42,6 +43,12 @@ function cssRules(ssr = false) {
 const baseConfig = {
   devtool: "source-map",
   resolve: {
+    alias: {
+      "preact-webpack-prerender/useStaticResult": path.resolve(
+        __dirname,
+        "webpack/useStaticResult.js"
+      ),
+    },
     extensions: [".js", ".jsx"],
   },
   optimization: {
@@ -77,6 +84,20 @@ const clientConfig = {
   },
   plugins: [
     ...baseConfig.plugins,
+    {
+      /** @param {import("webpack").Compiler} compiler */
+      apply(compiler) {
+        compiler.hooks.beforeCompile.tapPromise(
+          "REMOVE STATS",
+          async (options) => {
+            const p = path.resolve(process.cwd(), "public/static/stats.json");
+            if (fs.existsSync(p)) await fs.promises.unlink(p);
+
+            return options;
+          }
+        );
+      },
+    },
     new StatsWriterPlugin({
       stats: {
         all: true,

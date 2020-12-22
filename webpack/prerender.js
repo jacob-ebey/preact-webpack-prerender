@@ -21,6 +21,7 @@ module.exports = async function prerender(vnode, options) {
   }
 
   const preload = new Set();
+  const useStaticResults = {};
   const render = () => {
     if (++tries > maxDepth) return;
     try {
@@ -32,6 +33,14 @@ module.exports = async function prerender(vnode, options) {
             res.preload.forEach((p) => preload.add(p));
           }
 
+          if (
+            e.useStaticPromise &&
+            e.useStaticPromiseKey &&
+            !(e.useStaticPromiseKey in useStaticResults)
+          ) {
+            useStaticResults[e.useStaticPromiseKey] = res;
+          }
+
           return render();
         });
       throw e;
@@ -39,5 +48,9 @@ module.exports = async function prerender(vnode, options) {
   };
 
   const html = await render();
-  return { html, preload: [...preload] };
+  return {
+    html,
+    preload: [...preload],
+    useStaticResults,
+  };
 };
